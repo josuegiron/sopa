@@ -277,7 +277,7 @@ public class SopaSearch extends javax.swing.JFrame {
         } else if (scanner.ErrorTable.size() > 0) {
             new ErrorTable(scanner.ErrorTable).setVisible(true);
         } else {
-           // Parser parser = new Parser(scanner.TokenTable);
+            // Parser parser = new Parser(scanner.TokenTable);
         }
 
     }//GEN-LAST:event_jMenuItem11ActionPerformed
@@ -294,6 +294,9 @@ public class SopaSearch extends javax.swing.JFrame {
 
         Style green = sc.addStyle("ConstantWidth", null);
         StyleConstants.setForeground(green, Color.green);
+
+        Style pink = sc.addStyle("ConstantWidth", null);
+        StyleConstants.setForeground(pink, Color.pink);
 
         Style magenta = sc.addStyle("ConstantWidth", null);
         StyleConstants.setForeground(magenta, Color.magenta);
@@ -315,19 +318,20 @@ public class SopaSearch extends javax.swing.JFrame {
             } else if (token.Type == 2) {
                 doc.setCharacterAttributes(token.Offset, token.Length(), yellow, true);
             } else if (token.Type == 3) {
-                doc.setCharacterAttributes(token.Offset, token.Length(), green, true);
-            } else if (token.Type == 4) {
-                doc.setCharacterAttributes(token.Offset, token.Length(), magenta, true);
-            } else if (token.Type == 5) {
                 doc.setCharacterAttributes(token.Offset, token.Length(), red, true);
-            } else if (token.Type == 6) {
-                doc.setCharacterAttributes(token.Offset, token.Length(), orange, true);
+            } else if (token.Type == 4) {
+                doc.setCharacterAttributes(token.Offset, token.Length(), green, true);
+            } else if (token.Type == 5) {
+                doc.setCharacterAttributes(token.Offset, token.Length(), pink, true);
             } else if (token.Type == 7) {
+                doc.setCharacterAttributes(token.Offset, token.Length(), orange, true);
+            } else if (token.Type == 8) {
                 doc.setCharacterAttributes(token.Offset, token.Length(), cyan, true);
+            } else if (token.Type == 10) {
+                doc.setCharacterAttributes(token.Offset, token.Length(), magenta, true);
             }
         }
         for (Error error : scanner.ErrorTable) {
-            System.out.println(error.Offset);
             doc.setCharacterAttributes(error.Offset, error.Length(), err, true);
         }
     }
