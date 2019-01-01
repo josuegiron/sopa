@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import scanner.Alphabet;
 import scanner.Token;
 import error.Error;
+import java.awt.Color;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import sopa.Container;
 import sopa.Matriz;
 
 /**
@@ -22,8 +26,7 @@ public class LTSParser {
     public ArrayList<Error> ErrorTable;
     public Error error;
     public Matriz matriz;
-    int column = 0, row = 0, currentColumn = 0, currentRow = 0;
-    
+    int column = 0, row = 0, currentColumn = 0, currentRow = 0, numPosition = 0;
 
     public LTSParser(ArrayList<Token> tokenList) {
         ErrorTable = new ArrayList<error.Error>();
@@ -52,7 +55,7 @@ public class LTSParser {
     }
 
     private void matriz() {
-        
+
         if (!validateToken(alph.GetReservedWord(1))) {
             PrintError(1, tokenList.get(0));
         } else {
@@ -80,18 +83,27 @@ public class LTSParser {
             column = Integer.parseInt(tokenList.get(0).Lexeme);
             tokenList.remove(0);
         }
-        
+
         matriz = new Matriz(row, column);
-        
+
         positions();
     }
 
     private void positions() {
         switch (tokenList.get(0).Lexeme) {
             case "[":
-                position();
+                if(numPosition < row*column){
+                     position();
+                }else{
+                    AddError("Las letras ingresadas sobrepasan la matriz", tokenList.get(0));
+                }
                 break;
             default:
+                
+                if(numPosition != row*column){
+                    AddError("La matriz no esta completa o se pasa", tokenList.get(0));
+                }
+                
                 break;
         }
 
@@ -106,7 +118,9 @@ public class LTSParser {
         if (!validateTokenType(3)) {
             AddError(3, tokenList.get(0));
         } else {
-            matriz.sopa[currentRow][currentColumn] = tokenList.get(0).Lexeme.charAt(0);
+            Container container = new Container(currentRow, currentColumn, tokenList.get(0).Lexeme, JLabel.CENTER);
+            
+            matriz.sopa[currentRow][currentColumn] = container;
             next();
             tokenList.remove(0);
         }
@@ -117,10 +131,11 @@ public class LTSParser {
         }
         positions();
     }
-    
-    private void next(){
-        currentColumn ++;
-        if(currentColumn >= column){
+
+    private void next() {
+        currentColumn++;
+        numPosition++;
+        if (currentColumn >= column) {
             currentColumn = 0;
             currentRow++;
         }

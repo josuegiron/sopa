@@ -223,25 +223,23 @@ public class SopaSearch extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         OpenFileLTS();
         LTSParser ltsParser = new LTSParser(ltsScanner.TokenTable);
-        if (ltsParser.ErrorTable.size() == 0 || ltsScanner.ErrorTable.size() == 0) {
+        if (ltsParser.ErrorTable.size() == 0 && ltsScanner.ErrorTable.size() == 0) {
             openBSQ.setEnabled(true);
             showMessageDialog(null, "Archivo correcto!");
             for (int i = 0; i < ltsParser.matriz.row; i++) {
                 for (int j = 0; j < ltsParser.matriz.column; j++) {
-                    System.out.println("i "+ i+", j "+j+":"+ltsParser.matriz.sopa[i][j]);
+                    System.out.println("i "+ i+", j "+j+":"+ltsParser.matriz.sopa[i][j].getText());
                 }
             }
-            Sopa sopa = new Sopa(ltsParser.matriz.row, ltsParser.matriz.column);
-            sopa.Positions.get(3).setBackground(Color.blue);
-            sopa.Positions.get(3).setForeground(Color.white);
-            System.out.println(sopa.Positions.get(3).column);
-            System.out.println(sopa.Positions.get(3).row);
-            //System.out.println(ltsParser.matriz.row);
+            Sopa sopa = new Sopa(ltsParser.matriz.row, ltsParser.matriz.column, ltsParser.matriz.sopa);
+            ltsParser.matriz.sopa[2][3].setBackgroundColor("#8bb1c4");
+            
             sopa.setVisible(true);
         } else {
             openBSQ.setEnabled(false);
             showMessageDialog(null, "El archivo contiene errores");
-            //new ErrorTable(ltsScanner.ErrorTable).setVisible(true);
+            new ErrorTable(ltsScanner.ErrorTable).setVisible(true);
+            new ErrorTable(ltsParser.ErrorTable).setVisible(true);
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 

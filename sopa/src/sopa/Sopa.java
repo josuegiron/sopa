@@ -25,18 +25,16 @@ public class Sopa extends javax.swing.JFrame {
      */
     GridLayout gridSopa;
     int row, column;
-    public ArrayList<Container> Positions;
+    private Container[][] matriz;
     
 
-    public Sopa(int row, int column) {
+    public Sopa(int row, int column, Container[][] matriz) {
         this.row = row;
         this.column = column;
+        this.matriz = matriz;
 
         initComponents();
         gridSopa = new GridLayout(row + 1, column + 1);
-        System.out.println("columna " + column);
-        System.out.println("row " + row);
-        Positions = new ArrayList<Container>();
         Container container;
 
         javax.swing.border.Border border = BorderFactory.createLineBorder(Color.black, 1);
@@ -46,38 +44,19 @@ public class Sopa extends javax.swing.JFrame {
 
                 if (j == 0) {
                     container = new Container(i,j,"" + i, JLabel.CENTER);
-                    //container = new Container();
-                    container.setText("" + i);
-                    container.setSize(25, 25);
-                    container.setOpaque(true);
                     container.setBackground(Color.red);
                     container.setForeground(Color.white);
-                    container.setBorder(border);
-                    container.setVisible(true);
                     this.add(container);
                 } else if (i == 0) {
                     container = new Container(i,j,"" + j, JLabel.CENTER);
-                    //container = new JLabel("" + j, JLabel.CENTER);
-                    container.setSize(25, 25);
-                    container.setOpaque(true);
                     container.setBackground(Color.red);
                     container.setForeground(Color.white);
-                    container.setBorder(border);
-                    container.setVisible(true);
                     this.add(container);
                 } else {
-                    container = new Container(i,j,"A", JLabel.CENTER);
-                    container.setSize(25, 25);
-                    container.setOpaque(true);
-                    container.setBackground(Color.white);
-                    container.setForeground(Color.black);
-                    container.setBorder(border);
-                    container.setVisible(true);
+                    container = matriz[i-1][j-1];
                     this.add(container);
-                    Positions.add(container);
                 }
                 
-
             }
         }
         this.setLayout(gridSopa);
@@ -85,17 +64,7 @@ public class Sopa extends javax.swing.JFrame {
         this.setVisible(true);
     }
 
-    public void cargarSopa() {
-        JLabel letra;
-        for (int i = 0; i >= row; i++) {
-            for (int j = 0; j >= column; j++) {
-                letra = new JLabel("A");
-                letra.setSize(25, 25);
-                letra.setVisible(true);
-                this.add(letra);
-            }
-        }
-    }
+   
 
     /**
      * This method is called from within the constructor to initialize the form.

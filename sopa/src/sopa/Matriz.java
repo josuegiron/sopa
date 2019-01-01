@@ -11,11 +11,11 @@ package sopa;
  */
 public class Matriz {
     public int column, row;
-    public char[][] sopa;
+    public Container[][] sopa;
 
     public Matriz(int row, int column) {
         this.column = column;
         this.row = row;
-        sopa = new char[row][column];
+        sopa = new Container[row][column];
     }
 }
