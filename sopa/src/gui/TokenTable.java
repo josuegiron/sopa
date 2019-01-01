@@ -11,7 +11,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import scanner.Alphabet;
-import scanner.Error;
+import error.Error;
 import scanner.Token;
 
 /**

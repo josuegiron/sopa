@@ -5,9 +5,10 @@
  */
 package gui;
 
+import error.ErrorTable;
 import scanner.Scanner;
 import scanner.Token;
-import scanner.Error;
+import error.Error;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileReader;
@@ -23,6 +24,8 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
+import parser.LTSParser;
+import sopa.Sopa;
 //import parser.Parser;
 
 /**
@@ -54,6 +57,7 @@ public class SopaSearch extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        openBSQ = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
@@ -93,13 +97,22 @@ public class SopaSearch extends javax.swing.JFrame {
 
         jMenu1.setText("Archivo");
 
-        jMenuItem1.setText("Abrir...");
+        jMenuItem1.setText("Abrir archivo LTS");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
             }
         });
         jMenu1.add(jMenuItem1);
+
+        openBSQ.setText("Abrir archivo BSQ");
+        openBSQ.setEnabled(false);
+        openBSQ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openBSQActionPerformed(evt);
+            }
+        });
+        jMenu1.add(openBSQ);
 
         jMenuItem2.setText("Guardar");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
@@ -208,8 +221,28 @@ public class SopaSearch extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        OpenFile();
-// TODO add your handling code here:
+        OpenFileLTS();
+        LTSParser ltsParser = new LTSParser(ltsScanner.TokenTable);
+        if (ltsParser.ErrorTable.size() == 0 || ltsScanner.ErrorTable.size() == 0) {
+            openBSQ.setEnabled(true);
+            showMessageDialog(null, "Archivo correcto!");
+            for (int i = 0; i < ltsParser.matriz.row; i++) {
+                for (int j = 0; j < ltsParser.matriz.column; j++) {
+                    System.out.println("i "+ i+", j "+j+":"+ltsParser.matriz.sopa[i][j]);
+                }
+            }
+            Sopa sopa = new Sopa(ltsParser.matriz.row, ltsParser.matriz.column);
+            sopa.Positions.get(3).setBackground(Color.blue);
+            sopa.Positions.get(3).setForeground(Color.white);
+            System.out.println(sopa.Positions.get(3).column);
+            System.out.println(sopa.Positions.get(3).row);
+            //System.out.println(ltsParser.matriz.row);
+            sopa.setVisible(true);
+        } else {
+            openBSQ.setEnabled(false);
+            showMessageDialog(null, "El archivo contiene errores");
+            //new ErrorTable(ltsScanner.ErrorTable).setVisible(true);
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -223,6 +256,7 @@ public class SopaSearch extends javax.swing.JFrame {
     public StyleContext sc = new StyleContext();
     public DefaultStyledDocument doc = new DefaultStyledDocument(sc);
     public Scanner scanner = new Scanner();
+    public Scanner ltsScanner = new Scanner();
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
 
@@ -281,6 +315,10 @@ public class SopaSearch extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_jMenuItem11ActionPerformed
+
+    private void openBSQActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openBSQActionPerformed
+        OpenFileBSQ();
+    }//GEN-LAST:event_openBSQActionPerformed
 
     public void formatCode() {
         Style blue = sc.addStyle("ConstantWidth", null);
@@ -386,7 +424,7 @@ public class SopaSearch extends javax.swing.JFrame {
         });
     }
 
-    public void OpenFile() {
+    public void OpenFileBSQ() {
         //Creamos el objeto JFileChooser
         JFileChooser fc = new JFileChooser();
 
@@ -394,7 +432,7 @@ public class SopaSearch extends javax.swing.JFrame {
         fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
 //Creamos el filtro
-        FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.TRS", "trs");
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.BSQ", "bsq");
 
 //Le indicamos el filtro
         fc.setFileFilter(filtro);
@@ -474,6 +512,55 @@ public class SopaSearch extends javax.swing.JFrame {
         }
     }
 
+    private boolean OpenFileLTS() {
+        //Creamos el objeto JFileChooser
+        JFileChooser fc = new JFileChooser();
+
+//Indicamos lo que podemos seleccionar
+        fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+
+//Creamos el filtro
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.LST", "lst");
+
+//Le indicamos el filtro
+        fc.setFileFilter(filtro);
+
+//Abrimos la ventana, guardamos la opcion seleccionada por el usuario
+        int seleccion = fc.showOpenDialog(contentPane);
+
+//Si el usuario, pincha en aceptar
+        if (seleccion == JFileChooser.APPROVE_OPTION) {
+
+            //Seleccionamos el fichero
+            fileCode = fc.getSelectedFile();
+
+            //Ecribe la ruta del fichero seleccionado en el campo de texto
+            //code.setText(fileCode.getAbsolutePath());
+            try ( FileReader fr = new FileReader(fileCode)) {
+                String cadena = "";
+                int valor = fr.read();
+                while (valor != -1) {
+                    if (valor != 13) {
+                        cadena = cadena + (char) valor;
+                    }
+                    valor = fr.read();
+
+                }
+                ltsScanner.SetCode(cadena);
+                ltsScanner.Scan();
+                if (ltsScanner.ErrorTable.size() == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     private File fileCode;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -496,5 +583,6 @@ public class SopaSearch extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JMenuItem openBSQ;
     // End of variables declaration//GEN-END:variables
 }
