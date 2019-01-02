@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import sopa.Container;
 import sopa.Matriz;
+import sopa.Variable;
 
 /**
  *
@@ -22,18 +23,26 @@ import sopa.Matriz;
 public class BSQParser {
 
     public ArrayList<Token> tokenList;
-    private Alphabet alph;
     public ArrayList<Error> ErrorTable;
+    public ArrayList<Variable> SimbolTable;
+    private ArrayList<Integer> terms;
+    private ArrayList<String> signos;
+    private Alphabet alph;
     public Error error;
     public Matriz matriz;
     int column = 0, row = 0, currentColumn = 0, currentRow = 0, numPosition = 0;
+    Variable temp;
+    
 
     public BSQParser(ArrayList<Token> tokenList) {
         ErrorTable = new ArrayList<error.Error>();
+        SimbolTable = new ArrayList<Variable>();
         this.tokenList = tokenList;
         Token end = new Token(0, 0, 0, 0, "", 0);
         this.tokenList.add(end);
         alph = new Alphabet();
+        terms = new ArrayList<Integer>();
+        signos = new ArrayList<String>();
         inicio();
 
     }
@@ -91,6 +100,7 @@ public class BSQParser {
     }
 
     private void variable() {
+        
         if (!validateToken(alph.GetReservedWord(16))) {
             AddError(16, tokenList.get(0));
         } else {
@@ -106,7 +116,9 @@ public class BSQParser {
         } else {
             tokenList.remove(0);
         }
+        
         ids(); //   muchos id
+        
         if (!validateToken(";")) {
             AddError(";", tokenList.get(0));
         } else {
@@ -115,13 +127,16 @@ public class BSQParser {
     }
 
     private void ids() {
-
+        
         if (!validateTokenType(3)) {
             AddError("ID", tokenList.get(0));
         } else {
+            agregarVariable(tokenList.get(0).Lexeme);
             tokenList.remove(0);
         }
+       
         otherID();
+        
     }
 
     private void otherID() {
@@ -135,6 +150,7 @@ public class BSQParser {
                 if (!validateTokenType(3)) {
                     AddError("ID", tokenList.get(0));
                 } else {
+                    agregarVariable(tokenList.get(0).Lexeme);
                     tokenList.remove(0);
                 }
                 otherID();
@@ -156,9 +172,13 @@ public class BSQParser {
     }
 
     private void asignacion() {
+        terms = new ArrayList<Integer>();
+        signos = new ArrayList<String>();
+        
         if (!validateTokenType(3)) {
             AddError("ID", tokenList.get(0));
         } else {
+            temp = obtenerVariable(tokenList.get(0).Lexeme);
             tokenList.remove(0);
         }
 
@@ -179,9 +199,14 @@ public class BSQParser {
         } else {
             tokenList.remove(0);
         }
+        temp.setSignos(signos);
+        temp.setTerms(terms);
+        temp.valuteExpresion();
+        System.out.println(""+ temp.name+"="+ temp.value);
     }
-
+    
     private void expresion() {
+        
         termino();
         otroTermino();
 
@@ -190,9 +215,11 @@ public class BSQParser {
     private void termino() {
         switch (tokenList.get(0).Type) {
             case 2:
+                terms.add(Integer.parseInt(tokenList.get(0).Lexeme));
                 tokenList.remove(0);
                 break;
             case 3:
+                terms.add(obtenerVariable(tokenList.get(0).Lexeme).value);;
                 tokenList.remove(0);
                 break;
             default:
@@ -205,6 +232,7 @@ public class BSQParser {
     private void otroTermino() {
         switch (tokenList.get(0).Type) {
             case 9:
+                signos.add(tokenList.get(0).Lexeme);
                 tokenList.remove(0);
                 termino();
                 otroTermino();
@@ -251,7 +279,6 @@ public class BSQParser {
         } else {
             tokenList.remove(0);
         }
-
     }
 
     private void cuerpoBusqueda() {
@@ -472,6 +499,35 @@ public class BSQParser {
             currentColumn = 0;
             currentRow++;
         }
+    }
+    
+    private void agregarVariable(String name){
+        if(!validarVariable(name)){
+            SimbolTable.add(new Variable(name));
+        }else{
+            AddError("nombre de variable distinto", tokenList.get(0));
+        }
+    }
+    
+    private boolean validarVariable(String name){
+        for(Variable var: SimbolTable){
+            if(var.name.equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private Variable obtenerVariable(String name){
+        for(Variable var: SimbolTable){
+            if(var.name.equals(name)){
+                return var;
+            }
+        }
+        AddError("que la variable estuviera declarada", tokenList.get(0));
+        Variable err =  new Variable();
+        err.setValue(0);
+        return err;
     }
 
     private void AddError(String description, Token token) {
