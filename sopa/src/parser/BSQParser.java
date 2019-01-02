@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import sopa.Busqueda;
 import sopa.Container;
 import sopa.Matriz;
+import sopa.Search;
 import sopa.Variable;
 
 /**
@@ -37,7 +38,8 @@ public class BSQParser {
     Variable temp;
     
 
-    public BSQParser(ArrayList<Token> tokenList) {
+    public BSQParser(ArrayList<Token> tokenList, Matriz matriz) {
+        this.matriz = matriz;
         ErrorTable = new ArrayList<error.Error>();
         SimbolTable = new ArrayList<Variable>();
         this.tokenList = tokenList;
@@ -294,7 +296,14 @@ public class BSQParser {
         System.out.println(busqueda.fontColor);
         System.out.println(busqueda.backColor);
         System.out.println("-----");
+        Search search = new Search(matriz, busqueda);
+        if(search.searchWord()){
+            System.out.println("deberia pintar");
+            busqueda.paintWord();
+        }
         busquedas.add(busqueda);
+        
+        
     }
 
     private void cuerpoBusqueda() {

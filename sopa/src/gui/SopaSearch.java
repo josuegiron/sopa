@@ -26,6 +26,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import parser.BSQParser;
 import parser.LTSParser;
+import sopa.Matriz;
 import sopa.Sopa;
 //import parser.Parser;
 
@@ -38,7 +39,9 @@ public class SopaSearch extends javax.swing.JFrame {
     /**
      * Creates new form FrontEnd
      */
+    public Matriz matriz;
     public SopaSearch() {
+        
         initComponents();
         code.setDocument(doc);
     }
@@ -233,7 +236,7 @@ public class SopaSearch extends javax.swing.JFrame {
                 }
             }
             Sopa sopa = new Sopa(ltsParser.matriz.row, ltsParser.matriz.column, ltsParser.matriz.sopa);
-            ltsParser.matriz.sopa[2][3].setBackgroundColor("#8bb1c4");
+            this.matriz = ltsParser.matriz;
             
             sopa.setVisible(true);
         } else {
@@ -310,7 +313,7 @@ public class SopaSearch extends javax.swing.JFrame {
         } else if (scanner.ErrorTable.size() > 0) {
             new ErrorTable(scanner.ErrorTable).setVisible(true);
         } else {
-            BSQParser parser = new BSQParser(scanner.TokenTable);
+            BSQParser parser = new BSQParser(scanner.TokenTable, this.matriz);
         }
 
     }//GEN-LAST:event_jMenuItem11ActionPerformed
@@ -325,7 +328,7 @@ public class SopaSearch extends javax.swing.JFrame {
         } else if (scanner.ErrorTable.size() > 0) {
             new ErrorTable(scanner.ErrorTable).setVisible(true);
         } else {
-            BSQParser parser = new BSQParser(scanner.TokenTable);
+            BSQParser parser = new BSQParser(scanner.TokenTable, this.matriz);
         }
     }//GEN-LAST:event_openBSQActionPerformed
 
