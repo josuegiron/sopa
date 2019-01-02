@@ -61,7 +61,7 @@ public class BSQParser {
 
     private void bVariables() {
         if (!validateToken(alph.GetReservedWord(15))) {
-            AddError(1, tokenList.get(0));
+            AddError(15, tokenList.get(0));
         } else {
             tokenList.remove(0);
         }
@@ -92,7 +92,7 @@ public class BSQParser {
 
     private void variable() {
         if (!validateToken(alph.GetReservedWord(16))) {
-            AddError(1, tokenList.get(0));
+            AddError(16, tokenList.get(0));
         } else {
             tokenList.remove(0);
         }
@@ -117,7 +117,7 @@ public class BSQParser {
     private void ids() {
 
         if (!validateTokenType(3)) {
-            AddError(2, tokenList.get(0));
+            AddError("ID", tokenList.get(0));
         } else {
             tokenList.remove(0);
         }
@@ -133,7 +133,7 @@ public class BSQParser {
                     tokenList.remove(0);
                 }
                 if (!validateTokenType(3)) {
-                    AddError(3, tokenList.get(0));
+                    AddError("ID", tokenList.get(0));
                 } else {
                     tokenList.remove(0);
                 }
@@ -157,7 +157,7 @@ public class BSQParser {
 
     private void asignacion() {
         if (!validateTokenType(3)) {
-            AddError(3, tokenList.get(0));
+            AddError("ID", tokenList.get(0));
         } else {
             tokenList.remove(0);
         }
@@ -196,7 +196,7 @@ public class BSQParser {
                 tokenList.remove(0);
                 break;
             default:
-                AddError("numero o id", tokenList.get(0));
+                AddError("NUMERO o ID", tokenList.get(0));
                 break;
         }
 
@@ -229,12 +229,12 @@ public class BSQParser {
 
     private void bBusqueda() {
         if (!validateToken(alph.GetReservedWord(3))) {
-            AddError(1, tokenList.get(0));
+            AddError(3, tokenList.get(0));
         } else {
             tokenList.remove(0);
         }
         if (!validateTokenType(3)) {
-            AddError(3, tokenList.get(0));
+            AddError("ID", tokenList.get(0));
         } else {
             tokenList.remove(0);
         }
@@ -265,7 +265,7 @@ public class BSQParser {
 
     private void palabra() {
         if (!validateToken(alph.GetReservedWord(4))) {
-            AddError(1, tokenList.get(0));
+            AddError(4, tokenList.get(0));
         } else {
             tokenList.remove(0);
         }
@@ -281,7 +281,7 @@ public class BSQParser {
             tokenList.remove(0);
         }
         if (!validateTokenType(4)) {
-            AddError(4, tokenList.get(0));
+            AddError("CADENA", tokenList.get(0));
         } else {
             tokenList.remove(0);
         }
@@ -294,7 +294,7 @@ public class BSQParser {
 
     private void columna() {
         if (!validateToken(alph.GetReservedWord(5))) {
-            AddError(1, tokenList.get(0));
+            AddError(5, tokenList.get(0));
         } else {
             tokenList.remove(0);
         }
@@ -318,7 +318,7 @@ public class BSQParser {
                 tokenList.remove(0);
                 break;
             default:
-                AddError("numero o una varialble", tokenList.get(0));
+                AddError("NUMERO o ID", tokenList.get(0));
                 break;
         }
 
@@ -331,7 +331,7 @@ public class BSQParser {
 
     private void fila() {
         if (!validateToken(alph.GetReservedWord(6))) {
-            AddError(1, tokenList.get(0));
+            AddError(6, tokenList.get(0));
         } else {
             tokenList.remove(0);
         }
@@ -355,7 +355,7 @@ public class BSQParser {
                 tokenList.remove(0);
                 break;
             default:
-                AddError("numero o una varialble", tokenList.get(0));
+                AddError("NUMERO o ID", tokenList.get(0));
                 break;
         }
 
@@ -368,7 +368,7 @@ public class BSQParser {
 
     private void ordenBusqueda() {
         if (!validateToken(alph.GetReservedWord(7))) {
-            AddError(1, tokenList.get(0));
+            AddError(7, tokenList.get(0));
         } else {
             tokenList.remove(0);
         }
@@ -397,7 +397,7 @@ public class BSQParser {
                 tokenList.remove(0);
                 break;
             default:
-                AddError(1, tokenList.get(0));
+                AddError("palabra reservada", tokenList.get(0));
                 break;
         }
         if (!validateToken(";")) {
@@ -409,7 +409,7 @@ public class BSQParser {
 
     private void colorTexto() {
         if (!validateToken(alph.GetReservedWord(8))) {
-            AddError(1, tokenList.get(0));
+            AddError(8, tokenList.get(0));
         } else {
             tokenList.remove(0);
         }
@@ -425,7 +425,7 @@ public class BSQParser {
             tokenList.remove(0);
         }
         if (!validateTokenType(5)) {
-            AddError(5, tokenList.get(0));
+            AddError("COLOR HEXADECIMAL", tokenList.get(0));
         } else {
             tokenList.remove(0);
         }
@@ -438,7 +438,7 @@ public class BSQParser {
 
     private void fondoCasilla() {
         if (!validateToken(alph.GetReservedWord(9))) {
-            AddError(1, tokenList.get(0));
+            AddError(9, tokenList.get(0));
         } else {
             tokenList.remove(0);
         }
@@ -454,7 +454,7 @@ public class BSQParser {
             tokenList.remove(0);
         }
         if (!validateTokenType(5)) {
-            AddError(5, tokenList.get(0));
+            AddError("COLOR HEXADECIMAL", tokenList.get(0));
         } else {
             tokenList.remove(0);
         }

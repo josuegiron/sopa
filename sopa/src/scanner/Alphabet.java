@@ -17,7 +17,7 @@ import javax.swing.RowFilter.Entry;
 public class Alphabet {
 
     String[] L = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "\\u00d1", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "\\u00f1", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
-    String[] Lh = {"A", "B", "C", "D", "E", "F"};
+    String[] Lh = {"A", "B", "C", "D", "E", "F", "a", "b", "c", "d", "e", "f"};
     String[] N = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
     String[] S = {"+", "–", "*", "/"};
     String[] LL = {"{", "}"};
