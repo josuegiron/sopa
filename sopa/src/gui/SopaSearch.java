@@ -24,6 +24,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
+import parser.BSQParser;
 import parser.LTSParser;
 import sopa.Sopa;
 //import parser.Parser;
@@ -309,13 +310,23 @@ public class SopaSearch extends javax.swing.JFrame {
         } else if (scanner.ErrorTable.size() > 0) {
             new ErrorTable(scanner.ErrorTable).setVisible(true);
         } else {
-            // Parser parser = new Parser(scanner.TokenTable);
+            BSQParser parser = new BSQParser(scanner.TokenTable);
         }
 
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void openBSQActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openBSQActionPerformed
         OpenFileBSQ();
+        scanner.SetCode(code.getText());
+        scanner.Scan();
+        formatCode();
+        if (scanner.TokenTable.size() == 0) {
+            showMessageDialog(null, "La tabla de tokens esta vacía...");
+        } else if (scanner.ErrorTable.size() > 0) {
+            new ErrorTable(scanner.ErrorTable).setVisible(true);
+        } else {
+            BSQParser parser = new BSQParser(scanner.TokenTable);
+        }
     }//GEN-LAST:event_openBSQActionPerformed
 
     public void formatCode() {

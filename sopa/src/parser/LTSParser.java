@@ -143,7 +143,7 @@ public class LTSParser {
 
     private void AddError(String description, Token token) {
         ErrorTable.add(new Error(0, token.Row, token.Row, token.Lexeme, "Se esperaba " + description, token.Offset));
-        PrintError(":", tokenList.get(0));
+        PrintError(description, tokenList.get(0));
     }
 
     private void AddError(int id, Token token) {
