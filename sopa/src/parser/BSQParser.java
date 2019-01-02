@@ -12,6 +12,7 @@ import error.Error;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import sopa.Busqueda;
 import sopa.Container;
 import sopa.Matriz;
 import sopa.Variable;
@@ -27,7 +28,9 @@ public class BSQParser {
     public ArrayList<Variable> SimbolTable;
     private ArrayList<Integer> terms;
     private ArrayList<String> signos;
+    private ArrayList<Busqueda> busquedas;
     private Alphabet alph;
+    private Busqueda busqueda;
     public Error error;
     public Matriz matriz;
     int column = 0, row = 0, currentColumn = 0, currentRow = 0, numPosition = 0;
@@ -43,6 +46,7 @@ public class BSQParser {
         alph = new Alphabet();
         terms = new ArrayList<Integer>();
         signos = new ArrayList<String>();
+        busquedas = new ArrayList<Busqueda>();
         inicio();
 
     }
@@ -202,7 +206,8 @@ public class BSQParser {
         temp.setSignos(signos);
         temp.setTerms(terms);
         temp.valuteExpresion();
-        System.out.println(""+ temp.name+"="+ temp.value);
+        SimbolTable.add(temp);
+        System.out.println("Variable: "+ temp.name+"="+ temp.value);
     }
     
     private void expresion() {
@@ -256,6 +261,7 @@ public class BSQParser {
     }
 
     private void bBusqueda() {
+        busqueda = new Busqueda();
         if (!validateToken(alph.GetReservedWord(3))) {
             AddError(3, tokenList.get(0));
         } else {
@@ -264,6 +270,7 @@ public class BSQParser {
         if (!validateTokenType(3)) {
             AddError("ID", tokenList.get(0));
         } else {
+            busqueda.setName(tokenList.get(0).Lexeme);
             tokenList.remove(0);
         }
         if (!validateToken("{")) {
@@ -279,6 +286,15 @@ public class BSQParser {
         } else {
             tokenList.remove(0);
         }
+        System.out.println(busqueda.name);
+        System.out.println(busqueda.word);
+        System.out.println(busqueda.column);
+        System.out.println(busqueda.row);
+        System.out.println(busqueda.searchType);
+        System.out.println(busqueda.fontColor);
+        System.out.println(busqueda.backColor);
+        System.out.println("-----");
+        busquedas.add(busqueda);
     }
 
     private void cuerpoBusqueda() {
@@ -310,6 +326,7 @@ public class BSQParser {
         if (!validateTokenType(4)) {
             AddError("CADENA", tokenList.get(0));
         } else {
+            busqueda.setWord(tokenList.get(0).Lexeme.replace("\"", ""));
             tokenList.remove(0);
         }
         if (!validateToken(";")) {
@@ -339,9 +356,11 @@ public class BSQParser {
 
         switch (tokenList.get(0).Type) {
             case 2:
+                busqueda.setColumn(Integer.parseInt(tokenList.get(0).Lexeme));
                 tokenList.remove(0);
                 break;
             case 3:
+                busqueda.setColumn(obtenerVariable(tokenList.get(0).Lexeme).value);
                 tokenList.remove(0);
                 break;
             default:
@@ -376,9 +395,11 @@ public class BSQParser {
 
         switch (tokenList.get(0).Type) {
             case 2:
+                busqueda.setRow(Integer.parseInt(tokenList.get(0).Lexeme));
                 tokenList.remove(0);
                 break;
             case 3:
+                busqueda.setRow(obtenerVariable(tokenList.get(0).Lexeme).value);
                 tokenList.remove(0);
                 break;
             default:
@@ -412,15 +433,19 @@ public class BSQParser {
         }
         switch (tokenList.get(0).Lexeme.toLowerCase()) {
             case "horizontal_derecha":
+                busqueda.setSearchType(1);
                 tokenList.remove(0);
                 break;
             case "horizontal_izquierda":
+                busqueda.setSearchType(2);
                 tokenList.remove(0);
                 break;
             case "vertical_abajo":
+                busqueda.setSearchType(4);
                 tokenList.remove(0);
                 break;
             case "vertical_arriba":
+                busqueda.setSearchType(3);
                 tokenList.remove(0);
                 break;
             default:
@@ -454,6 +479,7 @@ public class BSQParser {
         if (!validateTokenType(5)) {
             AddError("COLOR HEXADECIMAL", tokenList.get(0));
         } else {
+            busqueda.setFontColor(tokenList.get(0).Lexeme);
             tokenList.remove(0);
         }
         if (!validateToken(";")) {
@@ -483,6 +509,7 @@ public class BSQParser {
         if (!validateTokenType(5)) {
             AddError("COLOR HEXADECIMAL", tokenList.get(0));
         } else {
+            busqueda.setBackColor(tokenList.get(0).Lexeme);
             tokenList.remove(0);
         }
         if (!validateToken(";")) {

@@ -35,9 +35,8 @@ public class Container extends JLabel {
     
     public void setBackgroundColor(String color){
         this.setBackground(Color.decode(color));
-        this.setForeground(Color.white);
-        if(color.equals("#FFFFFF")){
-            this.setForeground(Color.black);
-        }
+    }
+    public void setFontColor(String color){
+        this.setForeground(Color.decode(color));
     }
 }
