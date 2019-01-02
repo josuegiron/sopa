@@ -43,9 +43,12 @@ public class Search {
     private boolean searchRight() {
         int searchLength = busqueda.column;
         int i = busqueda.row;
+        
         if(searchLength >= word.length){
-            for(int j = busqueda.column; j >= word.length; j--){
-                int k = busqueda.column;
+            for(int j = busqueda.column; j >= 0; j--){
+                System.out.println("nueva iteracion: ");
+                int k = j;
+                boolean done = true;
                 for(char letter: word){
                     System.out.println(letter);
                     System.out.println(matriz.sopa[i][k].letter);
@@ -53,11 +56,15 @@ public class Search {
                         containers.add(matriz.sopa[i][k]);
                         k--;
                     }else{
-                        break;
+                        done = false;
                     }
                 }
-                busqueda.setContainers(containers);
-                return true;
+                if(done){
+                    busqueda.setContainers(containers);
+                    return true;
+                }else{
+                    containers.clear();
+                }
             }
         }
         return false;
