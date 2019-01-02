@@ -42,10 +42,16 @@ public class Search {
 
     private boolean searchRight() {
         int searchLength = busqueda.column;
-        int i = busqueda.row;
+        int i = busqueda.row-1;
         
         if(searchLength >= word.length){
-            for(int j = busqueda.column; j >= 0; j--){
+            for(int j = busqueda.column-1; j >= 0; j--){
+                
+                if(searchLength < word.length){
+                    return false;
+                }
+                searchLength--;
+                
                 //System.out.println("nueva iteracion: ");
                 int k = j;
                 boolean done = true;
@@ -72,16 +78,20 @@ public class Search {
 
     private boolean searchLeft() {
         int searchLength =  matriz.column - busqueda.column;
-        int i = busqueda.row;
+        int i = busqueda.row-1;
         
         if(searchLength >= word.length){
-            for(int j = busqueda.column; j <= matriz.column; j++){
-                System.out.println("nueva iteracion: ");
+            for(int j = busqueda.column-1; j <= matriz.column; j++){
+                if(searchLength < word.length){
+                    return false;
+                }
+                searchLength--;
+                //System.out.println("nueva iteracion: ");
                 int k = j;
                 boolean done = true;
                 for(char letter: word){
-                    System.out.println(letter);
-                    System.out.println(matriz.sopa[i][k].letter);
+                    //System.out.println(letter);
+                    //System.out.println(matriz.sopa[i][k].letter);
                     if(letter == matriz.sopa[i][k].letter){
                         containers.add(matriz.sopa[i][k]);
                         k++;
@@ -101,11 +111,74 @@ public class Search {
     }
 
     private boolean searchUp() {
+        int searchLength =  matriz.row - busqueda.row;
+        int j = busqueda.column-1;
         
+        if(searchLength >= word.length){
+            for(int i = busqueda.row-1; i <= matriz.row; i++){
+                if(searchLength < word.length){
+                    return false;
+                }
+                searchLength--;
+                
+                //System.out.println("nueva iteracion: ");
+                int h = i;
+                boolean done = true;
+                for(char letter: word){
+                    //System.out.println(letter);
+                    //System.out.println(matriz.sopa[h][j].letter);
+                    if(letter == matriz.sopa[h][j].letter){
+                        containers.add(matriz.sopa[h][j]);
+                        h++;
+                    }else{
+                        done = false;
+                    }
+                }
+                if(done){
+                    busqueda.setContainers(containers);
+                    return true;
+                }else{
+                    containers.clear();
+                }
+            }
+        }
         return false;
+        
     }
 
     private boolean searchDown() {
+        System.out.println("SEARCH DOWN");
+        int searchLength = busqueda.row;
+        int j = busqueda.column-1;
+        
+        if(searchLength >= word.length){
+            for(int i = busqueda.row-1; i >= 0; i--){
+                if(searchLength < word.length){
+                    return false;
+                }
+                searchLength--;
+                
+                System.out.println("nueva iteracion: ");
+                int h = i;
+                boolean done = true;
+                for(char letter: word){
+                    System.out.println(letter);
+                    System.out.println(matriz.sopa[h][j].letter);
+                    if(letter == matriz.sopa[h][j].letter){
+                        containers.add(matriz.sopa[h][j]);
+                        h--;
+                    }else{
+                        done = false;
+                    }
+                }
+                if(done){
+                    busqueda.setContainers(containers);
+                    return true;
+                }else{
+                    containers.clear();
+                }
+            }
+        }
         return false;
     }
 
