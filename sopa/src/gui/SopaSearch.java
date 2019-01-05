@@ -26,7 +26,9 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import parser.BSQParser;
 import parser.LTSParser;
+import sopa.Busqueda;
 import sopa.Matriz;
+import sopa.Search;
 import sopa.Sopa;
 //import parser.Parser;
 
@@ -58,6 +60,8 @@ public class SopaSearch extends javax.swing.JFrame {
         contentPane = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         code = new javax.swing.JTextPane();
+        searchFast = new javax.swing.JTextField();
+        searchFastB = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -98,6 +102,13 @@ public class SopaSearch extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        searchFastB.setText("Busqueda rápida");
+        searchFastB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchFastBActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("Archivo");
 
@@ -212,11 +223,21 @@ public class SopaSearch extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(contentPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(searchFast, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(38, 38, 38)
+                .addComponent(searchFastB)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
+                .addContainerGap(9, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchFast, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchFastB))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(contentPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -331,6 +352,14 @@ public class SopaSearch extends javax.swing.JFrame {
             BSQParser parser = new BSQParser(scanner.TokenTable, this.matriz);
         }
     }//GEN-LAST:event_openBSQActionPerformed
+
+    private void searchFastBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchFastBActionPerformed
+        String word = searchFast.getText();
+        Search search = new Search(this.matriz);
+        Busqueda myBusqueda = search.fastSearch(word);
+        System.out.println("Hola, ya lo encontré!");
+        myBusqueda.paintWord();
+    }//GEN-LAST:event_searchFastBActionPerformed
 
     public void formatCode() {
         Style blue = sc.addStyle("ConstantWidth", null);
@@ -596,5 +625,7 @@ public class SopaSearch extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JMenuItem openBSQ;
+    private javax.swing.JTextField searchFast;
+    private javax.swing.JButton searchFastB;
     // End of variables declaration//GEN-END:variables
 }
