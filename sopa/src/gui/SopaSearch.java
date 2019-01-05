@@ -27,6 +27,7 @@ import javax.swing.text.StyleContext;
 import parser.BSQParser;
 import parser.LTSParser;
 import sopa.Busqueda;
+import sopa.ExportCode;
 import sopa.Matriz;
 import sopa.Search;
 import sopa.Sopa;
@@ -349,7 +350,7 @@ public class SopaSearch extends javax.swing.JFrame {
         } else if (scanner.ErrorTable.size() > 0) {
             new ErrorTable(scanner.ErrorTable).setVisible(true);
         } else {
-            BSQParser parser = new BSQParser(scanner.TokenTable, this.matriz);
+           // BSQParser parser = new BSQParser(scanner.TokenTable, this.matriz);
         }
     }//GEN-LAST:event_openBSQActionPerformed
 
@@ -359,6 +360,11 @@ public class SopaSearch extends javax.swing.JFrame {
         Busqueda myBusqueda = search.fastSearch(word);
         System.out.println("Hola, ya lo encontré!");
         myBusqueda.paintWord();
+        ExportCode export = new ExportCode();
+        String hola ="hola";
+        export.setTextToExport(hola);
+        export.setEnabled(true);
+        export.setVisible(true);
     }//GEN-LAST:event_searchFastBActionPerformed
 
     public void formatCode() {
