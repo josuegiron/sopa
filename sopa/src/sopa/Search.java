@@ -82,7 +82,7 @@ public class Search {
     private boolean searchLeft(int row, int column) {
         int searchLength = matriz.column - column+1;
         int i = row - 1;
-        System.out.println("Tamaño de la busqueda "+searchLength);
+        //System.out.println("Tamaño de la busqueda "+searchLength);
         if (searchLength >= word.length) {
             if (searchLength < word.length) {
                 return false;
@@ -105,7 +105,6 @@ public class Search {
                 containers.clear();
             }
         }
-        System.out.println("hola");
 
         return false;
     }
@@ -145,7 +144,7 @@ public class Search {
     }
 
     private boolean searchDown(int row, int column) {
-        System.out.println("SEARCH DOWN");
+        //System.out.println("SEARCH DOWN");
         int searchLength = row+1;
         int j = column - 1;
 
@@ -155,8 +154,8 @@ public class Search {
             }
             searchLength--;
 
-            System.out.println("nueva iteracion: ");
-            int h = row;
+            //System.out.println("nueva iteracion: ");
+            int h = row-1;
             boolean done = true;
             for (char letter : word) {
                 //System.out.println(letter);
@@ -184,10 +183,10 @@ public class Search {
         busqueda = new Busqueda();
         busqueda.setBackColor("#909090");
         busqueda.setFontColor("#000000");
-        System.out.println(matriz.row);
+        busqueda.word = word;
+        //System.out.println(matriz.row);
         for (int i = 1; i <= matriz.row; i++) {
             for (int j = 1; j <= matriz.column; j++) {
-                System.out.println(j);
                 busqueda.column = j;
                 busqueda.row = i;
                 if (searchLeft(i, j)) {

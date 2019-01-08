@@ -16,6 +16,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import static javafx.scene.paint.Color.color;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultStyledDocument;
@@ -43,8 +44,9 @@ public class SopaSearch extends javax.swing.JFrame {
      * Creates new form FrontEnd
      */
     public Matriz matriz;
+
     public SopaSearch() {
-        
+
         initComponents();
         code.setDocument(doc);
     }
@@ -254,12 +256,12 @@ public class SopaSearch extends javax.swing.JFrame {
             showMessageDialog(null, "Archivo correcto!");
             for (int i = 0; i < ltsParser.matriz.row; i++) {
                 for (int j = 0; j < ltsParser.matriz.column; j++) {
-                    System.out.println("i "+ i+", j "+j+":"+ltsParser.matriz.sopa[i][j].getText());
+                    System.out.println("i " + i + ", j " + j + ":" + ltsParser.matriz.sopa[i][j].getText());
                 }
             }
             Sopa sopa = new Sopa(ltsParser.matriz.row, ltsParser.matriz.column, ltsParser.matriz.sopa);
             this.matriz = ltsParser.matriz;
-            
+
             sopa.setVisible(true);
         } else {
             openBSQ.setEnabled(false);
@@ -350,7 +352,7 @@ public class SopaSearch extends javax.swing.JFrame {
         } else if (scanner.ErrorTable.size() > 0) {
             new ErrorTable(scanner.ErrorTable).setVisible(true);
         } else {
-           // BSQParser parser = new BSQParser(scanner.TokenTable, this.matriz);
+            // BSQParser parser = new BSQParser(scanner.TokenTable, this.matriz);
         }
     }//GEN-LAST:event_openBSQActionPerformed
 
@@ -358,15 +360,44 @@ public class SopaSearch extends javax.swing.JFrame {
         String word = searchFast.getText();
         Search search = new Search(this.matriz);
         Busqueda myBusqueda = search.fastSearch(word);
-        System.out.println("Hola, ya lo encontré!");
-        myBusqueda.paintWord();
-        ExportCode export = new ExportCode();
-        String hola ="hola";
-        export.setTextToExport(hola);
-        export.setEnabled(true);
-        export.setVisible(true);
+        if (myBusqueda.searchType != 0) {
+            System.out.println("Hola, ya lo encontré!");
+            myBusqueda.paintWord();
+            ExportCode export = new ExportCode();
+            String hola = "BUSQUEDA busquedaSimple1 {\n"
+                    + "PALABRA:= ”" + myBusqueda.word + "”;\n"
+                    + "COLUMNA := " + myBusqueda.column + ";\n"
+                    + "FILA := " + myBusqueda.row + ";\n"
+                    + "ORDEN_BUSQUEDA := " + getOrden(myBusqueda.searchType) + ";\n"
+                    + "COLOR_TEXTO := " + myBusqueda.fontColor + ";\n"
+                    + "FONDO_CASILLA := " + myBusqueda.backColor + "; \n}";
+            export.setTextToCode(hola);
+
+            export.setVisible(true);
+            export.setEnabled(true);
+            export.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        }else{
+             showMessageDialog(null, "No se encontró la palabra, en la busqueda simple.");
+        }
+
+//          
+//      export.pack();
+//      export.setLocationRelativeTo(null);
     }//GEN-LAST:event_searchFastBActionPerformed
 
+    private String getOrden(int searchType){
+        switch(searchType){
+            case 1:
+                return "HORIZONTAL_IZQUIERDA";
+                case 2:
+                    return "HORIZONTAL_DERECHA";
+                case 3:
+                    return "VERTICAL_ARRIBA";
+                case 4:
+                    return "VERTICAL_ABAJO";
+        }
+        return null;
+    }
     public void formatCode() {
         Style blue = sc.addStyle("ConstantWidth", null);
         StyleConstants.setForeground(blue, Color.blue);
