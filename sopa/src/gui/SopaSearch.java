@@ -297,7 +297,7 @@ public class SopaSearch extends javax.swing.JFrame {
         scanner.SetCode(code.getText());
         scanner.Scan();
         formatCode();
-         parser = new BSQParser(scanner.TokenTable, this.matriz);
+        parser = new BSQParser(scanner.TokenTable, this.matriz);
         if (scanner.ErrorTable != null) {
             if (scanner.ErrorTable.size() != 0) {
                 new ErrorTable(scanner.ErrorTable).setVisible(true);
@@ -325,7 +325,12 @@ public class SopaSearch extends javax.swing.JFrame {
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
         if (scanner.TokenTable != null) {
             if (scanner.TokenTable.size() != 0) {
-                new TokenTable(scanner.TokenTable).setVisible(true);
+                try {
+                    exportTokensToHTML();
+                    //new TokenTable(scanner.TokenTable).setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(SopaSearch.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } else {
                 showMessageDialog(null, "La tabla de tokens esta vacía...");
             }
@@ -346,14 +351,13 @@ public class SopaSearch extends javax.swing.JFrame {
         scanner.SetCode(code.getText());
         scanner.Scan();
         formatCode();
-         parser = new BSQParser(scanner.TokenTable, this.matriz);
+        parser = new BSQParser(scanner.TokenTable, this.matriz);
         if (scanner.TokenTable.size() == 0) {
             showMessageDialog(null, "La tabla de tokens esta vacía...");
         } else if (scanner.ErrorTable.size() > 0) {
             new ErrorTable(scanner.ErrorTable).setVisible(true);
         }
-           
-        
+
 
     }//GEN-LAST:event_jMenuItem11ActionPerformed
     BSQParser parser;
@@ -605,7 +609,7 @@ public class SopaSearch extends javax.swing.JFrame {
         }
 
         Collections.sort(Errors, Error.Order);
-        
+
         PrintWriter pw = new PrintWriter(new FileWriter("errors.html"));
         DecimalFormat ff = new DecimalFormat("#0"), cf = new DecimalFormat(
                 "0.0");
@@ -613,6 +617,23 @@ public class SopaSearch extends javax.swing.JFrame {
         int i = 1;
         for (Error error : Errors) {
             pw.println("<TR ALIGN=CENTER><TD>" + i + "<TD>" + error.Error + "<TD>" + error.Description + "<TD>" + error.Row + "<TD>" + error.Colum);
+            i++;
+        }
+        pw.println("</TABLE>");
+        pw.close(); // Without this, the output file may be empty
+    }
+    
+    private void exportTokensToHTML() throws FileNotFoundException, IOException {
+        
+
+
+        PrintWriter pw = new PrintWriter(new FileWriter("tokens.html"));
+        DecimalFormat ff = new DecimalFormat("#0"), cf = new DecimalFormat(
+                "0.0");
+        pw.println("<TABLE BORDER><TR><TH>NO.<TH>Token<TH>Lexema<TH>Tipo<TH>Fila<TH>Columna</TR>");
+        int i = 1;
+        for (Token token : scanner.TokenTable) {
+            pw.println("<TR ALIGN=CENTER><TD>" + i + "<TD>" + token.Token + "<TD>" + token.Lexeme + "<TD>" + token.Type + "<TD>" + token.Row+ "<TD>" + token.Colum);
             i++;
         }
         pw.println("</TABLE>");
