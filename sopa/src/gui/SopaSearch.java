@@ -11,9 +11,17 @@ import scanner.Token;
 import error.Error;
 import java.awt.Color;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static javafx.scene.paint.Color.color;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -289,6 +297,7 @@ public class SopaSearch extends javax.swing.JFrame {
         scanner.SetCode(code.getText());
         scanner.Scan();
         formatCode();
+         parser = new BSQParser(scanner.TokenTable, this.matriz);
         if (scanner.ErrorTable != null) {
             if (scanner.ErrorTable.size() != 0) {
                 new ErrorTable(scanner.ErrorTable).setVisible(true);
@@ -299,7 +308,12 @@ public class SopaSearch extends javax.swing.JFrame {
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
         if (scanner.ErrorTable != null) {
             if (scanner.ErrorTable.size() != 0) {
-                new ErrorTable(scanner.ErrorTable).setVisible(true);
+                try {
+                    exportToHTML();
+                    //new ErrorTable(scanner.ErrorTable).setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(SopaSearch.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } else {
                 showMessageDialog(null, "No existen errores...");
             }
@@ -332,16 +346,17 @@ public class SopaSearch extends javax.swing.JFrame {
         scanner.SetCode(code.getText());
         scanner.Scan();
         formatCode();
+         parser = new BSQParser(scanner.TokenTable, this.matriz);
         if (scanner.TokenTable.size() == 0) {
             showMessageDialog(null, "La tabla de tokens esta vacía...");
         } else if (scanner.ErrorTable.size() > 0) {
             new ErrorTable(scanner.ErrorTable).setVisible(true);
-        } else {
-            BSQParser parser = new BSQParser(scanner.TokenTable, this.matriz);
         }
+           
+        
 
     }//GEN-LAST:event_jMenuItem11ActionPerformed
-
+    BSQParser parser;
     private void openBSQActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openBSQActionPerformed
         OpenFileBSQ();
         scanner.SetCode(code.getText());
@@ -360,7 +375,7 @@ public class SopaSearch extends javax.swing.JFrame {
         String word = searchFast.getText();
         Search search = new Search(this.matriz);
         Busqueda myBusqueda = search.fastSearch(word);
-        if (myBusqueda.searchType != 0) {
+        if (myBusqueda != null) {
             System.out.println("Hola, ya lo encontré!");
             myBusqueda.paintWord();
             ExportCode export = new ExportCode();
@@ -376,8 +391,8 @@ public class SopaSearch extends javax.swing.JFrame {
             export.setVisible(true);
             export.setEnabled(true);
             export.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        }else{
-             showMessageDialog(null, "No se encontró la palabra, en la busqueda simple.");
+        } else {
+            showMessageDialog(null, "No se encontró la palabra, en la busqueda simple.");
         }
 
 //          
@@ -385,19 +400,20 @@ public class SopaSearch extends javax.swing.JFrame {
 //      export.setLocationRelativeTo(null);
     }//GEN-LAST:event_searchFastBActionPerformed
 
-    private String getOrden(int searchType){
-        switch(searchType){
+    private String getOrden(int searchType) {
+        switch (searchType) {
             case 1:
                 return "HORIZONTAL_IZQUIERDA";
-                case 2:
-                    return "HORIZONTAL_DERECHA";
-                case 3:
-                    return "VERTICAL_ARRIBA";
-                case 4:
-                    return "VERTICAL_ABAJO";
+            case 2:
+                return "HORIZONTAL_DERECHA";
+            case 3:
+                return "VERTICAL_ARRIBA";
+            case 4:
+                return "VERTICAL_ABAJO";
         }
         return null;
     }
+
     public void formatCode() {
         Style blue = sc.addStyle("ConstantWidth", null);
         StyleConstants.setForeground(blue, Color.blue);
@@ -564,7 +580,7 @@ public class SopaSearch extends javax.swing.JFrame {
 
 //Le indicamos el filtro
         fc.setFileFilter(filtro);
- 
+
 //Abrimos la ventana, guardamos la opcion seleccionada por el usuario
         int seleccion = fc.showSaveDialog(contentPane);
 
@@ -577,6 +593,30 @@ public class SopaSearch extends javax.swing.JFrame {
             WriteCodeInFile();
 
         }
+    }
+
+    private void exportToHTML() throws FileNotFoundException, IOException {
+        ArrayList<Error> Errors = new ArrayList<Error>();
+        for (Error error : scanner.ErrorTable) {
+            Errors.add(error);
+        }
+        for (Error error : parser.ErrorTable) {
+            Errors.add(error);
+        }
+
+        Collections.sort(Errors, Error.Order);
+        
+        PrintWriter pw = new PrintWriter(new FileWriter("errors.html"));
+        DecimalFormat ff = new DecimalFormat("#0"), cf = new DecimalFormat(
+                "0.0");
+        pw.println("<TABLE BORDER><TR><TH>NO.<TH>Error<TH>Descripción<TH>Fila<TH>Columna</TR>");
+        int i = 1;
+        for (Error error : Errors) {
+            pw.println("<TR ALIGN=CENTER><TD>" + i + "<TD>" + error.Error + "<TD>" + error.Description + "<TD>" + error.Row + "<TD>" + error.Colum);
+            i++;
+        }
+        pw.println("</TABLE>");
+        pw.close(); // Without this, the output file may be empty
     }
 
     private void WriteCodeInFile() {

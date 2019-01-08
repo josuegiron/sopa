@@ -5,6 +5,8 @@
  */
 package error;
 
+import java.util.Comparator;
+
 /**
  *
  * @author josuegiron
@@ -70,4 +72,18 @@ public class Error {
     }
     
     public String Error, Description;
+    
+    public static Comparator<Error> Order = new Comparator<Error>() {
+
+	public int compare(Error e1, Error e2) {
+
+	   int error1 = e1.getRow();
+	   int error2 = e2.getRow();
+
+	   /*For ascending order*/
+	   return error1-error2;
+
+	   /*For descending order*/
+	   //rollno2-rollno1;
+   }};
 }
