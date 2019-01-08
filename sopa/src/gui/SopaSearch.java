@@ -560,11 +560,11 @@ public class SopaSearch extends javax.swing.JFrame {
         //Creamos el objeto JFileChooser
         JFileChooser fc = new JFileChooser();
 
-        FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.TRS", "trs");
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.BSQ", "bsq");
 
 //Le indicamos el filtro
         fc.setFileFilter(filtro);
-
+ 
 //Abrimos la ventana, guardamos la opcion seleccionada por el usuario
         int seleccion = fc.showSaveDialog(contentPane);
 
